@@ -1,0 +1,28 @@
+{
+  "environment": "web",
+  "source": "1MRZtiWB8GyXVTIliElH86QDiZriINRZeBRbPQ9yL4xk",
+  "format": "html",
+  "prefix": "../../",
+  "mainga": "UA-49880327-14",
+  "updated": "2018-11-30T08:45:01Z",
+  "id": "tutorial",
+  "duration": 0,
+  "title": "Embedded Basics with the ESP32",
+  "author": "locomuco",
+  "summary": "In this tutorial you will learn some basics about embedded programming using the ESP32 as an example platform",
+  "theme": "embedded-software",
+  "status": [
+    "draft"
+  ],
+  "category": [
+    "Embedded Software"
+  ],
+  "tags": [
+    "c",
+    "embedded software",
+    "esp32",
+    "wifi"
+  ],
+  "feedback": "https://github.com/googlecodelabs/your-first-pwapp/issues",
+  "url": "tutorial"
+}
