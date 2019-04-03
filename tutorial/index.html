@@ -7,19 +7,20 @@
   <meta name="theme-color" content="#4F7DC9">
   <meta charset="UTF-8">
   <title>Embedded Basics with the ESP32</title>
-  <script src="../../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
-  <link rel="import" href="../../elements/codelab.html">
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
-  <style is="custom-style">
-    body {
-      font-family: "Roboto",sans-serif;
-      background: var(--google-codelab-background, #F8F9FA);
+  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://storage.googleapis.com/codelab-elements/codelab-elements.css">
+  <style>
+    .success {
+      color: #1e8e3e;
+    }
+    .error {
+      color: red;
     }
   </style>
-  
 </head>
-<body unresolved class="fullbleed">
-
+<body>
+  <google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
   <google-codelab title="Embedded Basics with the ESP32"
                   environment="web"
                   feedback-link="https://github.com/googlecodelabs/your-first-pwapp/issues">
@@ -71,20 +72,20 @@
 <p>While you&#39;re free to use your own web server, this codelab is designed to work well with the Chrome Web Server. If you don&#39;t have that app installed yet, you can install it from the Chrome Web Store.</p>
 <p><a href="https://chrome.google.com/webstore/detail/web-server-for-chrome/ofhbbkphhbklhfoeikjpcbhemlocgigb" target="_blank"><paper-button class="colored" raised>Install Web Server for Chrome</paper-button></a></p>
 <p>After installing the Web Server for Chrome app, click on the Apps shortcut on the bookmarks bar: </p>
-<p><img alt="Screen Shot 2016-04-11 at 4.01.20 PM.png" style="max-width: 124.00px" src="img/9efdf0d1258b78e4.png"></p>
+<p><img alt="Screen Shot 2016-04-11 at 4.01.20 PM.png" style="width: 124.00px" src="img/9efdf0d1258b78e4.png"></p>
 <aside class="special"><p>More help: <a href="https://support.google.com/chrome_webstore/answer/3060053" target="_blank">Add and open Chrome apps</a></p>
 </aside>
 <p>In the ensuing window, click on the Web Server icon: </p>
-<p><img alt="Screen Shot 2016-02-18 at 11.45.19 AM.png" style="max-width: 72.88px" src="img/dc07bbc9fcfe7c5b.png"></p>
+<p><img alt="Screen Shot 2016-02-18 at 11.45.19 AM.png" style="width: 72.88px" src="img/dc07bbc9fcfe7c5b.png"></p>
 <p>You&#39;ll see this dialog next, which allows you to configure your local web server:</p>
-<p><img alt="Screen Shot 2016-02-18 at 11.48.14 AM.png" title="Web Server for Chrome Screenshot" style="max-width: 513.64px" src="img/433870360ad308d4.png"></p>
+<p><img alt="Screen Shot 2016-02-18 at 11.48.14 AM.png" title="Web Server for Chrome Screenshot" style="width: 513.64px" src="img/433870360ad308d4.png"></p>
 <p>Click the <strong>choose folder</strong> button, and select the <code>work</code> folder. This will enable you to serve your work in progress via the URL highlighted in the web server dialog (in the <strong>Web Server URL(s)</strong> section).</p>
 <p>Under Options, check the box next to &#34;Automatically show index.html&#34;, as shown below:</p>
-<p><img style="max-width: 233.00px" src="img/39b4e0371e9703e6.png"></p>
+<p><img style="width: 233.00px" src="img/39b4e0371e9703e6.png"></p>
 <p>Then stop and restart the server by sliding the toggle labeled &#34;Web Server: STARTED&#34; to the left and then back to the right.</p>
-<p><img alt="Screen Shot 2016-02-18 at 12.22.18 PM.png" style="max-width: 194.50px" src="img/daefd30e8a290df5.png"></p>
+<p><img alt="Screen Shot 2016-02-18 at 12.22.18 PM.png" style="width: 194.50px" src="img/daefd30e8a290df5.png"></p>
 <p>Now visit your work site in your web browser (by clicking on the highlighted Web Server URL) and you should see a page that looks like this:</p>
-<p><img style="max-width: 251.22px" src="img/aa64e93e8151b642.png"></p>
+<p><img style="width: 251.22px" src="img/aa64e93e8151b642.png"></p>
 <p>This app is not yet doing anything interesting - so far, it&#39;s just a minimal skeleton with a spinner we&#39;re using to verify your web server functionality. We&#39;ll add functionality and UI features in subsequent steps. </p>
 <aside class="special"><p>From this point forward, all testing/verification (e.g. the<strong> Test It Out</strong> sections in subsequent steps) should be performed using this web server setup.</p>
 </aside>
@@ -97,7 +98,7 @@
 <p>The app&#39;s shell is the minimal HTML, CSS, and JavaScript that is required to power the user interface of a progressive web app and is one of the components that ensures reliably good performance. Its first load should be extremely quick and immediately cached. &#34;Cached&#34; means that the shell files are loaded once over the network and then saved to the local device. Every subsequent time that the user opens the app, the shell files are loaded from the local device&#39;s cache, which results in blazing-fast startup times. </p>
 <p>App shell architecture separates the core application infrastructure and UI from the data. All of the UI and infrastructure is cached locally using a <a href="https://developers.google.com/web/fundamentals/getting-started/primers/service-workers" target="_blank">service worker</a> so that on subsequent loads, the Progressive Web App only needs to retrieve the necessary data, instead of having to load everything.</p>
 <p>A <a href="https://developers.google.com/web/fundamentals/getting-started/primers/service-workers" target="_blank">service worker</a> is a script that your browser runs in the background, separate from a web page, opening the door to features that don&#39;t need a web page or user interaction.</p>
-<p><img alt="appshell-1.jpg" style="max-width: 624.00px" src="img/156b5e3cc8373d55.png"></p>
+<p><img alt="appshell-1.jpg" style="width: 624.00px" src="img/156b5e3cc8373d55.jpeg"></p>
 <p>Put another way, the app shell is similar to the bundle of code that you&#39;d publish to an app store when building a native app. It is the core components necessary to get your app off the ground, but likely does not contain the data.</p>
 <h2><strong>Why use the App Shell architecture?</strong></h2>
 <p>Using the app shell architecture allows you to focus on speed, giving your Progressive Web App similar properties to native apps: instant loading and regular updates, all without the need of an app store.</p>
@@ -118,7 +119,7 @@
 <li>A dialog box for adding new cities</li>
 <li>A loading indicator</li>
 </ul>
-</td><td colspan="1" rowspan="1"><p><img style="max-width: 243.85px" src="img/166c3b4982e4a0ad.png"></p>
+</td><td colspan="1" rowspan="1"><p><img style="width: 243.85px" src="img/166c3b4982e4a0ad.png"></p>
 </td></tr>
 </table>
 <p>When designing a more complex app, content that isn&#39;t needed for the initial load can be requested later and then cached for future use. For example, we could defer the loading of the New City dialog until after we&#39;ve rendered the first run experience and have some idle cycles available.</p>
@@ -196,7 +197,7 @@
 <p>Next, uncomment the following line at the bottom of your <code>app.js</code> file:</p>
 <pre>// app.updateForecastCard(initialWeatherForecast);</pre>
 <p>Reload your app. The result should be a nicely formatted (though fake, as you can tell by the date) forecast card with the spinner disabled, like this:</p>
-<p><img style="max-width: 243.85px" src="img/166c3b4982e4a0ad.png"></p>
+<p><img style="width: 243.85px" src="img/166c3b4982e4a0ad.png"></p>
 <p><a href="https://weather-pwa-sample.firebaseapp.com/step-04/" target="_blank"><paper-button class="colored" raised>TRY IT</paper-button></a></p>
 <p>Once you&#39;ve tried it and verified it works as expected, you can remove the call to  <code>app.updateForecastCard</code> with the fake data again. We only needed it to ensure that everything worked as expected.</p>
 
@@ -322,10 +323,10 @@ self.addEventListener(&#39;install&#39;, function(e) {
 <p>First, we need to open the cache with <code>caches.open()</code> and provide a cache name. Providing a cache name allows us to version files, or separate data from the app shell so that we can easily update one but not affect the other.</p>
 <p>Once the cache is open, we can then call <code>cache.addAll()</code>, which takes a list of URLs, then fetches them from the server and adds the response to the cache. Unfortunately, <code>cache.addAll()</code> is atomic, if any of the files fail, the entire cache step fails!</p>
 <p>Alright, let&#39;s start getting familiar with how you can use DevTools to understand and debug service workers. Before reloading your page, open up DevTools, go the <strong>Service Worker</strong> pane on the <strong>Application</strong> panel. It should look like this.</p>
-<p><img style="max-width: 624.00px" src="img/ed4633f91ec1389f.png"></p>
+<p><img style="width: 624.00px" src="img/ed4633f91ec1389f.png"></p>
 <p>When you see a blank page like this, it means that the currently open page does not have any registered service workers.</p>
 <p>Now, reload your page. The Service Worker pane should now look like this.</p>
-<p><img style="max-width: 624.00px" src="img/bf15c2f18d7f945c.png"></p>
+<p><img style="width: 624.00px" src="img/bf15c2f18d7f945c.png"></p>
 <p>When you see information like this, it means the page has a service worker running.</p>
 <p>OK, now we&#39;re are going to take a brief detour and demonstrate a gotcha that you may encounter when developing service workers. To demonstrate, let&#39;s add an <code>activate</code> event listener below the <code>install</code> event listener in your <code>service-worker.js</code> file. </p>
 <pre><code>self.addEventListener(&#39;activate&#39;, function(e) {
@@ -333,11 +334,11 @@ self.addEventListener(&#39;install&#39;, function(e) {
 });</code></pre>
 <p>The <code>activate</code> event is fired when the service worker starts up.</p>
 <p>Open up the DevTools Console and reload the page, switch to the Service Worker pane in the Application panel and click inspect on the activated service worker. You expect to see the <code>[ServiceWorker] Activate</code> message logged to the console, but it didn&#39;t happen. Check out your Service Worker pane and you can see that the new service worker (that includes the activate event listener) appears to be in a &#34;waiting&#34; state.</p>
-<p><img style="max-width: 487.00px" src="img/1f454b6807700695.png"></p>
+<p><img style="width: 487.00px" src="img/1f454b6807700695.png"></p>
 <p>Basically, the old service worker continues to control the page as long as there is a tab open to the page. So, you <strong>could</strong> close and re-open the page or press the <strong>skipWaiting</strong> button, but a longer-term solution is to just enable the <strong>Update on Reload</strong> checkbox on the Service Worker pane of DevTools. When this checkbox is enabled, the service worker is forcibly updated every time that the page reloads.</p>
 <p>Enable the <strong>Update on Reload</strong> checkbox now and reload the page to confirm that the new service worker gets activated.</p>
 <p><strong>Note:</strong> You may see an error in the Service Worker pane of the Application panel similar to the one below, it&#39;s <strong>safe</strong> to ignore this error.</p>
-<p><img style="max-width: 424.00px" src="img/b1728ef310c444f5.png"></p>
+<p><img style="width: 424.00px" src="img/b1728ef310c444f5.png"></p>
 <p>That&#39;s all for now regarding inspecting and debugging service workers in DevTools. We&#39;ll show you some more tricks later. Let&#39;s get back to building your app.</p>
 <p>Let&#39;s expand on the <code>activate</code> event listener to include some logic to update the cache. Update your code to match the code below.</p>
 <pre><code>self.addEventListener(&#39;activate&#39;, function(e) {
@@ -402,11 +403,11 @@ self.addEventListener(&#39;install&#39;, function(e) {
 <h2>Test it out</h2>
 <p>Your app is now offline-capable! Let&#39;s try it out.</p>
 <p>Reload your page and then go to the <strong>Cache Storage</strong> pane on the <strong>Application</strong> panel of DevTools. Right click <strong>Cache Storage</strong>, pick <strong>Refresh Caches</strong>, expand the section and you should see the name of your app shell cache listed on the left-hand side. When you click on your app shell cache you can see all of the resources that it has currently cached.</p>
-<p><img style="max-width: 624.00px" src="img/ab9c361527825fac.png"></p>
+<p><img style="width: 624.00px" src="img/ab9c361527825fac.png"></p>
 <p>Now, let&#39;s test out offline mode. Go back to the <strong>Service Worker</strong> pane of DevTools and enable the <strong>Offline</strong> checkbox. After enabling it, you should see a little yellow warning icon next to the <strong>Network</strong> panel tab. This indicates that you&#39;re offline.</p>
-<p><img style="max-width: 624.00px" src="img/7656372ff6c6a0f7.png"></p>
+<p><img style="width: 624.00px" src="img/7656372ff6c6a0f7.png"></p>
 <p>Reload your page and... it works! Kind of, at least. Notice how it loads the initial (fake) weather data.</p>
-<p><img style="max-width: 396.00px" src="img/8a959b48e233bc93.png"></p>
+<p><img style="width: 396.00px" src="img/8a959b48e233bc93.png"></p>
 <p>Check out the <code>else</code> clause in <code>app.getForecast()</code> to understand why the app is able to load the fake data.</p>
 <p>The next step is to modify the app and service worker logic to be able to cache weather data, and return the most recent data from the cache when the app is offline.</p>
 <p><strong>Tip:</strong> To start fresh and clear all saved data (<code>localStorage</code>, <code>indexedDB</code> data, cached files) and remove any service workers, use the Clear storage pane in the Application tab.</p>
@@ -539,7 +540,7 @@ self.addEventListener(&#39;install&#39;, function(e) {
 <h2><strong>Test it out</strong></h2>
 <p>The app should be completely offline-functional now. Save a couple of cities and press the refresh button on the app to get fresh weather data, and then go offline and reload the page. </p>
 <p>Then go to the <strong>Cache Storage</strong> pane on the <strong>Application</strong> panel of DevTools. Expand the section and you should see the name of your app shell and data cache listed on the left-hand side. Opening the data cache should should the data stored for each city.</p>
-<p><img style="max-width: 624.00px" src="img/cf095c2153306fa7.png"></p>
+<p><img style="width: 624.00px" src="img/cf095c2153306fa7.png"></p>
 <p><a href="https://weather-pwa-sample.firebaseapp.com/step-07/" target="_blank"><paper-button class="colored" raised>TRY IT</paper-button></a></p>
 
 
@@ -619,13 +620,13 @@ self.addEventListener(&#39;install&#39;, function(e) {
 <p>In this section we&#39;ll show you a couple of ways to test your web app manifest.</p>
 <p>The first way is DevTools. Open up the <strong>Manifest</strong> pane on the <strong>Application</strong> panel. If you&#39;ve added the manifest information correctly, you&#39;ll be able to see it parsed and displayed in a human-friendly format on this pane.</p>
 <p>You can also test the add to homescreen feature from this pane. Click on the <strong>Add to homescreen</strong> button. You should see a &#34;add this site to your shelf&#34; message below your URL bar, like in the screenshot below.</p>
-<p><img style="max-width: 624.00px" src="img/cbfdd0302b611ab0.png"></p>
+<p><img style="width: 624.00px" src="img/cbfdd0302b611ab0.png"></p>
 <p>This is the desktop equivalent of mobile&#39;s add to homescreen feature. If you can successfully trigger this prompt on desktop, then you can be assured that mobile users can add your app to their devices.</p>
 <p>The second way to test is via Web Server for Chrome. With this approach, you expose your local development server (on your desktop or laptop) to other computers, and then you just access your progressive web app from a real mobile device.</p>
 <aside class="warning"><p>Opening up a port for remote access is handy for testing this step but may be blocked by your computer&#39;s firewall rules or network administrator. Opening ports for remote access is generally not a good thing to leave running on your computer. So, for security reasons, when you&#39;ve completed testing this step, disable the <code>Accessible on local network</code> option and restart your web server.</p>
 </aside>
 <p>On Web Server for Chrome configuration dialog, select the <code>Accessible on local network</code> option:</p>
-<p><img alt="Screen Shot 2016-05-12 at 5.42.40 PM.png" style="max-width: 371.56px" src="img/81347b12f83e4291.png"></p>
+<p><img alt="Screen Shot 2016-05-12 at 5.42.40 PM.png" style="width: 371.56px" src="img/81347b12f83e4291.png"></p>
 <p>Toggle the Web Server to <code>STOPPED</code> and back to <code>STARTED</code>. You&#39;ll see a new URL which can be used to access your app remotely.</p>
 <p>Now, access your site from a mobile device, using the new URL.</p>
 <p>You will see service worker errors in the console when testing this way because the service worker is not being served over HTTPS.</p>
@@ -670,33 +671,10 @@ self.addEventListener(&#39;install&#39;, function(e) {
     
   </google-codelab>
 
-  <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-    ga('create', 'UA-49880327-14', 'auto');
-
-    (function() {
-      var gaCodelab = '';
-      if (gaCodelab) {
-        ga('create', gaCodelab, 'auto', {name: 'codelab'});
-      }
-
-      var gaView;
-      var parts = location.search.substring(1).split('&');
-      for (var i = 0; i < parts.length; i++) {
-        var param = parts[i].split('=');
-        if (param[0] === 'viewga') {
-          gaView = param[1];
-          break;
-        }
-      }
-      if (gaView && gaView !== gaCodelab) {
-        ga('create', gaView, 'auto', {name: 'view'});
-      }
-    })();
-  </script>
+  <script src="https://storage.googleapis.com/codelab-elements/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/prettify.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/codelab-elements.js"></script>
 
 </body>
 </html>
