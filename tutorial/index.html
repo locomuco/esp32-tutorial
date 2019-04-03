@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
   <meta name="theme-color" content="#4F7DC9">
   <meta charset="UTF-8">
-  <title>Embedded Basics with the ESP32</title>
+  <title>Exploring WiFi Mesh with the ESP32</title>
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
   <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
   <link rel="stylesheet" href="https://storage.googleapis.com/codelab-elements/codelab-elements.css">
@@ -21,50 +21,52 @@
 </head>
 <body>
   <google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
-  <google-codelab title="Embedded Basics with the ESP32"
+  <google-codelab title="Exploring WiFi Mesh with the ESP32"
                   environment="web"
-                  feedback-link="https://github.com/googlecodelabs/your-first-pwapp/issues">
+                  feedback-link="https://github.com/locomuco/esp32-tutorial/issues">
     
       <google-codelab-step label="Welcome" duration="0">
-        <p>To the first codelab of the Munich Embedded Meetup Group </p>
+        <p>To the first codelab of the Embedded Meetup Group Munich</p>
 <h2><strong>What&#39;s the target audience of this tutorial?</strong></h2>
 <p>Everybody interested in programming C or C++</p>
 <p>No previous coding experience needed</p>
 <h2><strong>What is an ESP32?</strong></h2>
 <p>The ESP32 is a low cost WiFi Chip</p>
+<p><img style="width: 624.00px" src="img/2207d1d682100539.png"></p>
 <ul>
-<li><a href="https://www.amazon.com/Espressif-ESP32-ESP32-DEVKITC-ESP-WROOM-32-soldered/dp/B01N0SB08Q" target="_blank">https://www.amazon.com/Espressif-ESP32-ESP32-DEVKITC-ESP-WROOM-32-soldered/dp/B01N0SB08Q</a></li>
+<li><a href="https://www.espressif.com/en/products/hardware/esp32/overview" target="_blank">https://www.espressif.com/en/products/hardware/esp32/overview</a></li>
 </ul>
 <p>Some basics that you&#39;ll also learn in this codelab are:</p>
 <ul>
-<li><strong>Git </strong>- a tool to store and manage lifetime of code online</li>
+<li><strong>Git &amp; Github </strong>- learn the basics of source control</li>
 </ul>
-<p>This codelab will walk you through creating your own Progressive Web App, including the design considerations, as well as implementation details, to ensure that your app meets the above key principles of a Progressive Web App.</p>
-<aside class="special"><p>Looking for more? Check out the talks from the <a href="https://www.youtube.com/playlist?list=PLNYkxOF6rcIAWWNR_Q6eLPhsyx6VvYjVb" target="_blank">2016 Progressive Web App Summit</a>.</p>
+<p>This codelab will walk you through the process of setting up the environment to compile and program some example code to an ESP32 and start some own development to extend the functionality of the given sample</p>
+<aside class="special"><p>Any Feedback? Open an issue at <a href="https://github.com/locomuco/esp32-tutorial/issues" target="_blank">https://github.com/locomuco/esp32-tutorial/issues</a></p>
 </aside>
 <h2><strong>What you will build</strong></h2>
 <h2 class="checklist"><strong>What you&#39;ll learn</strong></h2>
 <ul class="checklist">
-<li>How to design and construct an app using the &#34;app shell&#34; method</li>
-<li>How to make your app work offline</li>
-<li>How to store data for later offline use</li>
+<li>How to build &amp; compile a program for a Microcontroller</li>
+<li>How to program a Microcontroller with your compiled code</li>
+<li>How to set up a Mesh Network with the ESP32</li>
 </ul>
 <h2><strong>What you&#39;ll need</strong></h2>
 <ul>
-<li><a href="https://www.amazon.com/Espressif-ESP32-ESP32-DEVKITC-ESP-WROOM-32-soldered/dp/B01N0SB08Q" target="_blank">https://www.amazon.com/Espressif-ESP32-ESP32-DEVKITC-ESP-WROOM-32-soldered/dp/B01N0SB08Q</a></li>
-<li><a href="https://chrome.google.com/webstore/detail/web-server-for-chrome/ofhbbkphhbklhfoeikjpcbhemlocgigb" target="_blank">Web Server for Chrome</a>, or your own web server of choice</li>
-<li><a href="https://github.com/googlecodelabs/your-first-pwapp/archive/master.zip" target="_blank">The sample code</a></li>
-<li>A text editor</li>
-<li>Basic knowledge of HTML, CSS, JavaScript, and <a href="https://developer.chrome.com/devtools" target="_blank">Chrome DevTools</a></li>
+<li>A ESP32 development board</li>
+<li>A computer running Linux, Windows, or macOS</li>
+<li>A USB cable to connect the dev board to your computer</li>
+<li>A text editor, or the IDE of your choice</li>
+<li>Basic knowledge of C</li>
 </ul>
-<p>This codelab is focused on Progressive Web Apps. Non-relevant concepts and code blocks are glossed over and are provided for you to simply copy and paste.</p>
+<p>This codelab is focused on Embedded Code. Non-relevant concepts and code blocks are glossed over and are provided for you to simply copy and paste.</p>
 
 
       </google-codelab-step>
     
       <google-codelab-step label="Getting set up" duration="0">
-        <h2>Getting<strong> the Source Code</strong></h2>
-<p>Click the following link to download all the code for this codelab:</p>
+        <h2>Setting up the Toolchain</h2>
+<h2><strong>Getting the Source Code</strong></h2>
+<p>The source </p>
 <p><a href="https://github.com/googlecodelabs/your-first-pwapp/archive/master.zip" target="_blank"><paper-button class="colored" raised><iron-icon icon="file-download"></iron-icon>Download source code</paper-button></a></p>
 <p>Unpack the downloaded zip file. This will unpack a root folder (<code>your-first-pwapp-master</code>), which contains one folder for each step of this codelab, along with all of the resources you will need.</p>
 <p>The <code>step-NN</code> folders contain the desired end state of each step of this codelab. They are there for reference. We&#39;ll be doing all our coding work in a directory called <code>work</code>.</p>

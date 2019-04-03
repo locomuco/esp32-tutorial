@@ -4,12 +4,12 @@
   "format": "html",
   "prefix": "https://storage.googleapis.com",
   "mainga": "UA-49880327-14",
-  "updated": "2019-04-03T17:55:59Z",
+  "updated": "2019-04-03T18:33:03Z",
   "id": "tutorial",
   "duration": 0,
-  "title": "Embedded Basics with the ESP32",
-  "author": "locomuco",
-  "summary": "In this tutorial you will learn some basics about embedded programming using the ESP32 as an example platform",
+  "title": "Exploring WiFi Mesh with the ESP32",
+  "author": "Matthias Boesl",
+  "summary": "In this tutorial you will learn some basics about embedded programming using the ESP32 as an example platform and get some knowledge about mesh WiFi",
   "theme": "embedded-software",
   "status": [
     "draft"
@@ -23,6 +23,6 @@
     "esp32",
     "wifi"
   ],
-  "feedback": "https://github.com/googlecodelabs/your-first-pwapp/issues",
+  "feedback": "https://github.com/locomuco/esp32-tutorial/issues",
   "url": "tutorial"
 }
