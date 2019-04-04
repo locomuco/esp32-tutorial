@@ -44,6 +44,9 @@
 <aside class="special"><p>Any Feedback? Open an issue at <a href="https://github.com/locomuco/esp32-tutorial/issues" target="_blank">https://github.com/locomuco/esp32-tutorial/issues</a></p>
 </aside>
 <h2><strong>What you will build</strong></h2>
+<ul>
+<li>A sample application using the ESP32</li>
+</ul>
 <h2 class="checklist"><strong>What you&#39;ll learn</strong></h2>
 <ul class="checklist">
 <li>How to build &amp; compile a program for a Microcontroller</li>
@@ -64,31 +67,25 @@
       </google-codelab-step>
     
       <google-codelab-step label="Getting set up" duration="0">
-        <h2>Setting up the Toolchain</h2>
+        <h2><strong>Setting up the Toolchain</strong></h2>
+<p>Linux (Ubuntu)</p>
+<p><a href="https://dl.espressif.com/dl/xtensa-esp32-elf-linux64-1.22.0-80-g6c4433a-5.2.0.tar.gz" target="_blank"><paper-button class="colored" raised><iron-icon icon="file-download"></iron-icon>Download Toolchain 64 bit</paper-button></a></p>
+<pre>mkdir -p ~/esp
+cd ~/esp
+tar -xzf ~/Downloads/xtensa-esp32-elf-linux64-1.22.0-80-g6c4433a-5.2.0.tar.gz</pre>
+<p><a href="https://dl.espressif.com/dl/xtensa-esp32-elf-linux32-1.22.0-80-g6c4433a-5.2.0.tar.gz" target="_blank"><paper-button class="colored" raised><iron-icon icon="file-download"></iron-icon>Download Toolchain 632 bit</paper-button></a></p>
+<pre>mkdir -p ~/esp
+cd ~/esp
+tar -xzf ~/Downloads/xtensa-esp32-elf-linux32-1.22.0-80-g6c4433a-5.2.0.tar.gz</pre>
+<p><code>Setting up Build Requirements</code></p>
+<pre>sudo apt-get install gcc git wget make libncurses-dev flex bison gperf python python-pip python-setuptools python-serial python-cryptography python-future python-pyparsing</pre>
+<pre>export PATH=&#34;$HOME/esp/xtensa-esp32-elf/bin:$PATH&#34;</pre>
 <h2><strong>Getting the Source Code</strong></h2>
-<p>The source </p>
-<p><a href="https://github.com/googlecodelabs/your-first-pwapp/archive/master.zip" target="_blank"><paper-button class="colored" raised><iron-icon icon="file-download"></iron-icon>Download source code</paper-button></a></p>
-<p>Unpack the downloaded zip file. This will unpack a root folder (<code>your-first-pwapp-master</code>), which contains one folder for each step of this codelab, along with all of the resources you will need.</p>
-<p>The <code>step-NN</code> folders contain the desired end state of each step of this codelab. They are there for reference. We&#39;ll be doing all our coding work in a directory called <code>work</code>.</p>
-<h2><strong>Install and verify web server</strong></h2>
-<p>While you&#39;re free to use your own web server, this codelab is designed to work well with the Chrome Web Server. If you don&#39;t have that app installed yet, you can install it from the Chrome Web Store.</p>
-<p><a href="https://chrome.google.com/webstore/detail/web-server-for-chrome/ofhbbkphhbklhfoeikjpcbhemlocgigb" target="_blank"><paper-button class="colored" raised>Install Web Server for Chrome</paper-button></a></p>
-<p>After installing the Web Server for Chrome app, click on the Apps shortcut on the bookmarks bar: </p>
-<p><img alt="Screen Shot 2016-04-11 at 4.01.20 PM.png" style="width: 124.00px" src="img/9efdf0d1258b78e4.png"></p>
-<aside class="special"><p>More help: <a href="https://support.google.com/chrome_webstore/answer/3060053" target="_blank">Add and open Chrome apps</a></p>
-</aside>
-<p>In the ensuing window, click on the Web Server icon: </p>
-<p><img alt="Screen Shot 2016-02-18 at 11.45.19 AM.png" style="width: 72.88px" src="img/dc07bbc9fcfe7c5b.png"></p>
-<p>You&#39;ll see this dialog next, which allows you to configure your local web server:</p>
-<p><img alt="Screen Shot 2016-02-18 at 11.48.14 AM.png" title="Web Server for Chrome Screenshot" style="width: 513.64px" src="img/433870360ad308d4.png"></p>
-<p>Click the <strong>choose folder</strong> button, and select the <code>work</code> folder. This will enable you to serve your work in progress via the URL highlighted in the web server dialog (in the <strong>Web Server URL(s)</strong> section).</p>
-<p>Under Options, check the box next to &#34;Automatically show index.html&#34;, as shown below:</p>
-<p><img style="width: 233.00px" src="img/39b4e0371e9703e6.png"></p>
-<p>Then stop and restart the server by sliding the toggle labeled &#34;Web Server: STARTED&#34; to the left and then back to the right.</p>
-<p><img alt="Screen Shot 2016-02-18 at 12.22.18 PM.png" style="width: 194.50px" src="img/daefd30e8a290df5.png"></p>
-<p>Now visit your work site in your web browser (by clicking on the highlighted Web Server URL) and you should see a page that looks like this:</p>
-<p><img style="width: 251.22px" src="img/aa64e93e8151b642.png"></p>
-<p>This app is not yet doing anything interesting - so far, it&#39;s just a minimal skeleton with a spinner we&#39;re using to verify your web server functionality. We&#39;ll add functionality and UI features in subsequent steps. </p>
+<p>TBD</p>
+<p><code>git clone --recursive https://github.com/espressif/esp-mdf.git</code></p>
+<p><code>export MDF_PATH=~/esp/esp-mdf</code></p>
+<p><strong>Connecting the ESP32 Board to your computer</strong></p>
+<p><strong>TBD</strong></p>
 <aside class="special"><p>From this point forward, all testing/verification (e.g. the<strong> Test It Out</strong> sections in subsequent steps) should be performed using this web server setup.</p>
 </aside>
 
