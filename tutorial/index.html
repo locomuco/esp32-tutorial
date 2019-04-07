@@ -129,13 +129,56 @@ macOS    /dev/cu</code></pre>
         <p>Programming the device can be done with espressif tools <strong>esptools</strong></p>
 <pre><code>make flash</code></pre>
 <h2><strong>TBD</strong></h2>
-<p>TBD</p>
+<pre>esptool.py v2.0-beta2
+Flashing binaries to serial port /dev/ttyUSB0 (app at offset 0x10000)...
+esptool.py v2.0-beta2
+Connecting........___
+Uploading stub...
+Running stub...
+Stub running...
+Changing baud rate to 921600
+Changed.
+Attaching SPI flash...
+Configuring flash size...
+Auto-detected Flash size: 4MB
+Flash params set to 0x0220
+Compressed 11616 bytes to 6695...
+Wrote 11616 bytes (6695 compressed) at 0x00001000 in 0.1 seconds (effective 920.5 kbit/s)...
+Hash of data verified.
+Compressed 408096 bytes to 171625...
+Wrote 408096 bytes (171625 compressed) at 0x00010000 in 3.9 seconds (effective 847.3 kbit/s)...
+Hash of data verified.
+Compressed 3072 bytes to 82...
+Wrote 3072 bytes (82 compressed) at 0x00008000 in 0.0 seconds (effective 8297.4 kbit/s)...
+Hash of data verified.
+
+Leaving...
+Hard resetting...</pre>
+<pre><code>make monitor</code></pre>
+<pre>MONITOR
+--- idf_monitor on /dev/ttyUSB0 115200 ---
+--- Quit: Ctrl+] | Menu: Ctrl+T | Help: Ctrl+T followed by Ctrl+H ---
+ets Jun  8 2016 00:22:57
+
+rst:0x1 (POWERON_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+ets Jun  8 2016 00:22:57
+...</pre>
+<pre><code></code></pre>
+<aside class="special"><p>To leave the logging use   ‘Ctrl+]&#39;</p>
+<p>The programming baudrate can be changed using menuconfig as described in the previous step, see selection below, this speeds up the development cycle by a few seconds</p>
+</aside>
+<p><img style="width: 624.00px" src="img/93dd2e680b74413f.png"></p>
+<p>Congrats, you now can do the full compile / program / debug cycle :-)</p>
+<aside class="special"><p>You can combine the whole cycle in one line typing:</p>
+<p>make flash monitor</p>
+</aside>
 
 
       </google-codelab-step>
     
       <google-codelab-step label="ESP32 WiFi Mesh" duration="0">
         <p>blabla</p>
+<p><img style="width: 624.00px" src="img/314228079280b795.png"></p>
 <h2><strong>TBD</strong></h2>
 <p>TBD</p>
 
