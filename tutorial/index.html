@@ -68,8 +68,13 @@
     
       <google-codelab-step label="Git &amp; Github" duration="0">
         <h2><strong>Setting up Git</strong></h2>
+<p>If you have experience with Git and Github already, feel free to jump directly to the next chapter</p>
 <h3><strong>Linux (Ubuntu)</strong></h3>
+<p>Install the git package</p>
 <pre><code>sudo apt-get install git</code></pre>
+<p>Set your git name and email</p>
+<pre><code>git config --global user.name &#34;John Doe&#34;
+git config --global user.email &#34;john.doe@gmail.com&#34;</code></pre>
 
 
       </google-codelab-step>
@@ -94,9 +99,10 @@ tar -xzf ~/Downloads/xtensa-esp32-elf-linux32-1.22.0-80-g6c4433a-5.2.0.tar.gz</c
 <h3>macOS</h3>
 <p><a href="https://dl.espressif.com/dl/xtensa-esp32-elf-osx-1.22.0-80-g6c4433a-5.2.0.tar.gz" target="_blank"><paper-button class="colored" raised><iron-icon icon="file-download"></iron-icon>Download Toolchain</paper-button></a></p>
 <h2><strong>Getting the Source Code</strong></h2>
+<p>Checking out the espressif Mesh Development Kit can be done with following command, be sure to add the recursive option, to check out all the submodules. The submodules also contain a specific version of the ESP-IDF, the common</p>
 <pre><code>git clone --recursive https://github.com/espressif/esp-mdf.git
 export MDF_PATH=~/esp/esp-mdf</code></pre>
-<p><strong>Connecting the ESP32 Board to your computer</strong></p>
+<h2><strong>Connecting the ESP32 Board to your computer</strong></h2>
 <p>Connecting the DEV-BOARD to your PC is done with a plain USB cable, the Dev Board holds a FTDI chip, that provides a serial interface to the ESP32.</p>
 <p><img style="width: 624.00px" src="img/1f90719ce58a115e.png"></p>
 <aside class="special"><p>In linux you user needs to be added to the <strong>dialout</strong> group</p>
@@ -111,13 +117,17 @@ macOS    /dev/cu</code></pre>
       <google-codelab-step label="Building your first FW image for the ESP32" duration="0">
         <h2><strong>Build and flash the project by running:</strong></h2>
 <p>Build and flash your device using</p>
-<pre><code>make flash</code></pre>
+<pre><code>make</code></pre>
+<p><code>The esp-idf uses menuconfig to apply Kernel configurations.</code></p>
+<pre><code>make menuconfig</code></pre>
+<h2><img style="width: 624.00px" src="img/fe3333caf07c7ad0.png"></h2>
 
 
       </google-codelab-step>
     
       <google-codelab-step label="Programming your FW image to the device" duration="0">
         <p>Programming the device can be done with espressif tools <strong>esptools</strong></p>
+<pre><code>make flash</code></pre>
 <h2><strong>TBD</strong></h2>
 <p>TBD</p>
 
