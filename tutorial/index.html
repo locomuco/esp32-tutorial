@@ -102,8 +102,12 @@ tar -xzf ~/Downloads/xtensa-esp32-elf-linux32-1.22.0-80-g6c4433a-5.2.0.tar.gz</c
 <p>Checking out the espressif Mesh Development Kit can be done with following command, be sure to add the recursive option, to check out all the submodules. The submodules also contain a specific version of the ESP-IDF, the common</p>
 <pre><code>git clone --recursive https://github.com/espressif/esp-mdf.git
 export MDF_PATH=~/esp/esp-mdf</code></pre>
-<h2><strong>Connecting the ESP32 Board to your computer</strong></h2>
-<p>Connecting the DEV-BOARD to your PC is done with a plain USB cable, the Dev Board holds a FTDI chip, that provides a serial interface to the ESP32.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Connecting the ESP32 Board to your computer" duration="0">
+        <p>Connecting the DEV-BOARD to your PC is done with a plain USB cable, the Dev Board holds a FTDI chip, that provides a serial interface to the ESP32.</p>
 <p><img style="width: 624.00px" src="img/1f90719ce58a115e.png"></p>
 <aside class="special"><p>In linux you user needs to be added to the <strong>dialout</strong> group</p>
 </aside>
@@ -126,9 +130,10 @@ macOS    /dev/cu</code></pre>
       </google-codelab-step>
     
       <google-codelab-step label="Programming your FW image to the device" duration="0">
-        <p>Programming the device can be done with espressif tools <strong>esptools</strong></p>
+        <h2><strong>Programming</strong></h2>
+<p>Programming the device can be done with espressif tools <strong>esptools</strong></p>
 <pre><code>make flash</code></pre>
-<h2><strong>TBD</strong></h2>
+<p>This should give you similar output to below</p>
 <pre>esptool.py v2.0-beta2
 Flashing binaries to serial port /dev/ttyUSB0 (app at offset 0x10000)...
 esptool.py v2.0-beta2
@@ -154,7 +159,10 @@ Hash of data verified.
 
 Leaving...
 Hard resetting...</pre>
+<h2>Debugging</h2>
+<p>The makefile system also provides command line tools for console debugging, using the command below, you can see UART prints from the ESP32 going from the ESP32 over the serial line to your terminal on the connected PC.</p>
 <pre><code>make monitor</code></pre>
+<p>Should give you following output</p>
 <pre>MONITOR
 --- idf_monitor on /dev/ttyUSB0 115200 ---
 --- Quit: Ctrl+] | Menu: Ctrl+T | Help: Ctrl+T followed by Ctrl+H ---
@@ -165,8 +173,8 @@ ets Jun  8 2016 00:22:57
 ...</pre>
 <pre><code></code></pre>
 <aside class="special"><p>To leave the logging use   ‘Ctrl+]&#39;</p>
-<p>The programming baudrate can be changed using menuconfig as described in the previous step, see selection below, this speeds up the development cycle by a few seconds</p>
 </aside>
+<p>The programming baudrate can be changed using menuconfig as described in the previous step, see selection below, this speeds up the development cycle by a few seconds</p>
 <p><img style="width: 624.00px" src="img/93dd2e680b74413f.png"></p>
 <p>Congrats, you now can do the full compile / program / debug cycle :-)</p>
 <aside class="special"><p>You can combine the whole cycle in one line typing:</p>
