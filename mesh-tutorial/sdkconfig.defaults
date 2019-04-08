@@ -6,6 +6,13 @@
 CONFIG_ESPTOOLPY_FLASHSIZE_4MB=y
 
 #
+# Mesh networking
+#
+
+# Form a binary tree by limiting number of children (i.e. softAP connections)
+CONFIG_MWIFI_MAX_CONNECTION=2
+
+#
 # Partition Table
 #
 CONFIG_PARTITION_TABLE_CUSTOM=y
