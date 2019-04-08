@@ -178,6 +178,22 @@ static void print_system_info_timercb(void *timer)
         MDF_LOGI("Child mac: " MACSTR, MAC2STR(wifi_sta_list.sta[i].mac));
     }
 
+    /* Print routing table */
+    int route_table_size = esp_mesh_get_routing_table_size();
+    mesh_addr_t route_table[route_table_size];
+
+    esp_mesh_get_routing_table(route_table,
+        sizeof(mesh_addr_t) * route_table_size, &route_table_size);
+
+    MDF_LOGI("Routing table [%d]:", route_table_size);
+    for (int i = 0; i < route_table_size; i++) {
+        uint8_t *mesh_ip = (uint8_t *)&route_table[i].mip.ip4;
+
+        MDF_LOGI("  node: " MACSTR " mip: %d.%d.%d.%d:%d",
+        MAC2STR(route_table[i].addr),
+        mesh_ip[0], mesh_ip[1], mesh_ip[2], mesh_ip[3], route_table[i].mip.port);
+    }
+
 #ifdef MEMORY_DEBUG
     if (!heap_caps_check_integrity_all(true)) {
         MDF_LOGE("At least one heap is corrupt");
