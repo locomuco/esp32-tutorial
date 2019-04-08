@@ -25,6 +25,7 @@
 #include "mdf_common.h"
 #include "mwifi.h"
 #include "driver/gpio.h"
+#include "mlink.h"
 
 
 // #define MEMORY_DEBUG
@@ -35,11 +36,6 @@ static const char *TAG = "esp32_tutorial";
 #define GPIO_LED 2
 
 static int blink_count = 0;
-
-void led_set_blinking(int count)
-{
-   blink_count = count;
-}
 
 void led_task(void *pvParameter)
 {
@@ -52,17 +48,16 @@ void led_task(void *pvParameter)
    MDF_LOGI("LED task is running");
 
    while(1) {
+       blink_count = esp_mesh_get_layer();
        for (i = 0; i < blink_count; i++) {
            gpio_set_level(GPIO_LED, 1);
-           vTaskDelay(100 / portTICK_PERIOD_MS);
+           vTaskDelay(200 / portTICK_PERIOD_MS);
            gpio_set_level(GPIO_LED, 0);
-           vTaskDelay(100 / portTICK_PERIOD_MS);
+           vTaskDelay(200 / portTICK_PERIOD_MS);
        }
        vTaskDelay(1000 / portTICK_PERIOD_MS);
    }
 }
-
-
 
 static void root_task(void *arg)
 {
