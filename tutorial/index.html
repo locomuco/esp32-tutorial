@@ -29,7 +29,7 @@
         <p>To the first codelab of the Embedded Meetup Group Munich</p>
 <h2><strong>What&#39;s the target audience of this tutorial?</strong></h2>
 <p>Everybody interested in programming C or C++</p>
-<p>No previous coding experience needed</p>
+<p>No previous coding experience needed, but helpful</p>
 <h2><strong>What is an ESP32?</strong></h2>
 <p>The ESP32 is a low cost WiFi Chip</p>
 <p><img style="width: 624.00px" src="img/2207d1d682100539.png"></p>
@@ -89,7 +89,7 @@ tar -xzf ~/Downloads/xtensa-esp32-elf-linux32-1.22.0-80-g6c4433a-5.2.0.tar.gz</c
 <p>To keep the ESP32 makefile system informed about the location of your compiler, you need to export the Compiler Path, you can do it at any time in your open terminal, or add this line to the end of your bashrc at </p>
 <pre><code>export PATH=&#34;$HOME/esp/xtensa-esp32-elf/bin:$PATH&#34;</code></pre>
 <p>bashrc file</p>
-<pre><code>~/.bashrc</code></pre>
+<pre><code>source ~/.bashrc</code></pre>
 <h3><strong>Windows</strong></h3>
 <p><a href="https://dl.espressif.com/dl/esp32_win32_msys2_environment_and_toolchain-20181001.zip" target="_blank"><paper-button class="colored" raised><iron-icon icon="file-download"></iron-icon>Download ZIP</paper-button></a></p>
 <p>Unzip the zip file to <code>C:\</code> (or some other location, but this guide assumes <code>C:\</code>) and it will create an <code>msys32</code> directory with a pre-prepared environment.</p>
@@ -114,20 +114,21 @@ export MDF_PATH=~/esp/esp-mdf</code></pre>
       <google-codelab-step label="Connecting the ESP32 Board" duration="0">
         <p>Connecting the DEV-BOARD to your PC is done with a plain USB cable, the Dev Board holds a FTDI chip, that provides a serial interface to the ESP32.</p>
 <p><img style="width: 624.00px" src="img/1f90719ce58a115e.png"></p>
-<aside class="special"><p>In linux you user needs to be added to the <strong>dialout</strong> group</p>
+<pre>Windows  COM1
+Linux    /dev/ttyUSB..
+macOS    /dev/cu</pre>
+<aside class="special"><p>In linux you user needs to be added to the <strong>dialout</strong> group with...</p>
 </aside>
-<pre><code>Windows  COM1
-Linux    /dev/ttyUSB
-macOS    /dev/cu</code></pre>
+<pre><code>sudo usermod -a -G dialout $USER</code></pre>
 
 
       </google-codelab-step>
     
       <google-codelab-step label="Building the Firmware" duration="0">
         <h2><strong>Build and flash the project by running:</strong></h2>
-<p>Build and flash your device using</p>
+<p>Build your firmware using</p>
 <pre><code>make</code></pre>
-<p><code>The esp-idf uses menuconfig to apply Kernel configurations.</code></p>
+<p>The esp-idf uses menuconfig to apply different configurations, just have a try and look through the different options.</p>
 <pre><code>make menuconfig</code></pre>
 <h2><img style="width: 624.00px" src="img/fe3333caf07c7ad0.png"></h2>
 
@@ -224,7 +225,7 @@ ets Jun  8 2016 00:22:57
 <li>Thread parameters (not used in our case)</li>
 <li>A thread priority, that indicates how important this thread is, compared to the other running ones</li>
 </ul>
-<pre><code>       xTaskCreate(my_first_thread, &#34;my_first_thread&#34;, 1024,
+<pre><code>       xTaskCreate(my_first_thread, &#34;my_first_thread&#34;, 2 * 1024,
                    NULL, 5, NULL);</code></pre>
 <h3><strong>Let&#39;s look, what we have until now:</strong></h3>
 <ul>
@@ -234,38 +235,35 @@ ets Jun  8 2016 00:22:57
 </ul>
 <p>OK, now that we can run a task, we want to blink a LED on our DEV board, below is a rudimentary implementation of the blinking LED task.</p>
 <p>Don&#39;t forget to create your task as described in the previous step</p>
-<pre><code>#include &#34;driver/gpio.h&#34;
+<pre><code>#include &#34;driver/gpio.h&#34;</code></pre>
+<pre><code>#define GPIO_LED 2
 
-#define GPIO_LED 2
+static int blink_count = 0;
 
-static int delay = 1000;
-
-void set_led(int led_delay_ms)
+void led_set_blinking(int count)
 {
-    delay = led_delay_ms;
+   blink_count = count;
 }
 
 void led_task(void *pvParameter)
 {
-    /* set PAD to GPIO mode */
-    gpio_pad_select_gpio(GPIO_LED);
-    /* Set the GPIO as a push/pull output */
-    gpio_set_direction(GPIO_LED, GPIO_MODE_OUTPUT);
+   int i;
+   /* set PAD to GPIO mode */
+   gpio_pad_select_gpio(GPIO_LED);
+   /* Set the GPIO as a push/pull output */
+   gpio_set_direction(GPIO_LED, GPIO_MODE_OUTPUT);
 
-    while(1) {
+   MDF_LOGI(&#34;LED task is running&#34;);
 
-        if (delay == 0) {
-            gpio_set_level(GPIO_LED, 1);
-            vTaskDelay(1000 / portTICK_PERIOD_MS);
-        } else {
-            /* Blink off (output low) */
-            gpio_set_level(GPIO_LED, 0);
-            vTaskDelay(delay / portTICK_PERIOD_MS);
-            /* Blink on (output high) */
-            gpio_set_level(GPIO_LED, 1);
-            vTaskDelay(delay / portTICK_PERIOD_MS);
-        }
-    }
+   while(1) {
+       for (i = 0; i &lt; blink_count; i++) {
+           gpio_set_level(GPIO_LED, 1);
+           vTaskDelay(100 / portTICK_PERIOD_MS);
+           gpio_set_level(GPIO_LED, 0);
+           vTaskDelay(100 / portTICK_PERIOD_MS);
+       }
+       vTaskDelay(1000 / portTICK_PERIOD_MS);
+   }
 }</code></pre>
 <aside class="special"><p>ESP32 is a 32-bit architecture, reads and writes to 32-bit variables are atomic. In this case we don&#39;t need to protect the delay variable, when accessed from different threads from the outside.</p>
 </aside>
@@ -274,10 +272,20 @@ void led_task(void *pvParameter)
       </google-codelab-step>
     
       <google-codelab-step label="ESP32 WiFi Mesh" duration="0">
-        <p>blabla</p>
+        <p>Blabla</p>
 <p><img style="width: 624.00px" src="img/314228079280b795.png"></p>
 <h2><strong>TBD</strong></h2>
 <p>TBD</p>
+<pre><code>#include &#34;mlink.h&#34;</code></pre>
+<pre><code>static mdf_err_t led_show_layer(mlink_handle_data_t *handle_data)
+{
+   led_set_blinking(esp_mesh_get_layer());
+   return MDF_OK;
+}</code></pre>
+<pre><code>   /**
+    * @brief Add a request handler
+    */
+   MDF_ERROR_ASSERT(mlink_set_handle(&#34;show_layer&#34;, led_show_layer));</code></pre>
 
 
       </google-codelab-step>
