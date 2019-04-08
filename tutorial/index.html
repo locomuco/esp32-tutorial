@@ -49,9 +49,10 @@
 </ul>
 <h2 class="checklist"><strong>What you&#39;ll learn</strong></h2>
 <ul class="checklist">
-<li>How to build &amp; compile a program for a Microcontroller</li>
+<li>How to build / compile and debug a program for a Microcontroller</li>
 <li>How to program a Microcontroller with your compiled code</li>
-<li>How to set up a Mesh Network with the ESP32</li>
+<li>How to create and run a task in a Embedded Device</li>
+<li>How to set up a Mesh Network with the ESP32 base samples</li>
 </ul>
 <h2><strong>What you&#39;ll need</strong></h2>
 <ul>
@@ -189,6 +190,90 @@ ets Jun  8 2016 00:22:57
 <p><img style="width: 624.00px" src="img/314228079280b795.png"></p>
 <h2><strong>TBD</strong></h2>
 <p>TBD</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="How to create and run a Thread" duration="0">
+        <h2>Hey, w<strong>hat is a thread?</strong></h2>
+<p>Without an multithreading OS, all commands are executed in a big loop, often referred to the ‘main&#39; loop. When software gets more complex, this approach sometimes cannot fulfill the realtime requirements, since every command is executed sequentially.</p>
+<p>Thus you want to set up and execute multiple loops in parallel, and allow them to interrupt each other.</p>
+<p>A thread is one of the split out loops containing it&#39;s own stack to hold ram content, and it&#39;s own priority with respect to the other threads flying around.</p>
+<h2><strong>OK, how can I create one?</strong></h2>
+<p>It&#39;s pretty simple, just look at the sample below.</p>
+<pre><code>static void my_first_thread(void *arg)
+{
+   MDF_LOGI(&#34;I&#39;m running&#34;);
+
+   while(1) {
+       vTaskDelay(500 / portTICK_RATE_MS);
+       MDF_LOGI(&#34;I&#39;m performing some periodic action&#34;);
+       //add more code here
+   }
+   vTaskDelete(NULL);
+}</code></pre>
+<p>Now let&#39;s see what it&#39;s doing:</p>
+<pre><code>   MDF_LOGI(&#34;I&#39;m running&#34;);</code></pre>
+<p>Just prints you the line in your DEBUG output, you can see it using the ‘make monitor&#39; build command</p>
+<pre><code>while(1) {
+       vTaskDelay(500 / portTICK_RATE_MS);
+       MDF_LOGI(&#34;I&#39;m performing some periodic action&#34;);
+       //add more code here
+   }</code></pre>
+<p>In the next step we see the loop performed in the thread, like the main loop, but encapsulated in it&#39;s own scope. The action performed is pretty simple, we&#39;re using some FreeRTOS primitive ‘vTaskDelay&#39; to block the task for 0,5 seconds, and print something while unblocked, this runs forever...</p>
+<p>To create the thread just use the following given FreeRTOS function. It needs:</p>
+<ul>
+<li>The thread function you just created with the previous code snippet</li>
+<li>a generic name, i used the function name</li>
+<li>The size of the stack, reserved for this thread</li>
+<li>Thread parameters (not used in our case)</li>
+<li>A thread priority, that indicates how important this thread is, compared to the other running ones</li>
+</ul>
+<pre><code>       xTaskCreate(my_first_thread, &#34;my_first_thread&#34;, 1024,
+                   NULL, 5, NULL);</code></pre>
+<h3><strong>Let&#39;s look, what we have until now:</strong></h3>
+<ul>
+<li>We have checked out the ESP32 Mesh Development Kit</li>
+<li>We have built our first sample from scratch</li>
+<li>We have created our first task, that prints something every 0,5 s</li>
+</ul>
+<p>OK, now that we can run a task, we want to blink a LED on our DEV board, below is a rudimentary implementation of the blinking LED task.</p>
+<p>Don&#39;t forget to create your task as described in the previous step</p>
+<pre><code>#include &#34;driver/gpio.h&#34;
+
+#define GPIO_LED 2
+
+static int delay = 1000;
+
+void set_led(int led_delay_ms)
+{
+    delay = led_delay_ms;
+}
+
+void led_task(void *pvParameter)
+{
+    /* set PAD to GPIO mode */
+    gpio_pad_select_gpio(GPIO_LED);
+    /* Set the GPIO as a push/pull output */
+    gpio_set_direction(GPIO_LED, GPIO_MODE_OUTPUT);
+
+    while(1) {
+
+        if (delay == 0) {
+            gpio_set_level(GPIO_LED, 1);
+            vTaskDelay(1000 / portTICK_PERIOD_MS);
+        } else {
+            /* Blink off (output low) */
+            gpio_set_level(GPIO_LED, 0);
+            vTaskDelay(delay / portTICK_PERIOD_MS);
+            /* Blink on (output high) */
+            gpio_set_level(GPIO_LED, 1);
+            vTaskDelay(delay / portTICK_PERIOD_MS);
+        }
+    }
+}</code></pre>
+<aside class="special"><p>ESP32 is a 32-bit architecture, reads and writes to 32-bit variables are atomic. In this case we don&#39;t need to protect the delay variable, when accessed from different threads from the outside.</p>
+</aside>
 
 
       </google-codelab-step>
