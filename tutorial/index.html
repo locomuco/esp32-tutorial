@@ -67,7 +67,7 @@
 
       </google-codelab-step>
     
-      <google-codelab-step label="Getting set up" duration="0">
+      <google-codelab-step label="Setting up the Environment" duration="0">
         <h2><strong>Setting up the Toolchain</strong></h2>
 <h3><strong>Linux (Ubuntu)</strong></h3>
 <p><a href="https://dl.espressif.com/dl/xtensa-esp32-elf-linux64-1.22.0-80-g6c4433a-5.2.0.tar.gz" target="_blank"><paper-button class="colored" raised><iron-icon icon="file-download"></iron-icon>Download Toolchain 64 bit</paper-button></a></p>
@@ -111,7 +111,7 @@ export MDF_PATH=~/esp/esp-mdf</code></pre>
 
       </google-codelab-step>
     
-      <google-codelab-step label="Connecting the ESP32 Board to your computer" duration="0">
+      <google-codelab-step label="Connecting the ESP32 Board" duration="0">
         <p>Connecting the DEV-BOARD to your PC is done with a plain USB cable, the Dev Board holds a FTDI chip, that provides a serial interface to the ESP32.</p>
 <p><img style="width: 624.00px" src="img/1f90719ce58a115e.png"></p>
 <aside class="special"><p>In linux you user needs to be added to the <strong>dialout</strong> group</p>
@@ -123,7 +123,7 @@ macOS    /dev/cu</code></pre>
 
       </google-codelab-step>
     
-      <google-codelab-step label="Building your first FW image for the ESP32" duration="0">
+      <google-codelab-step label="Building the Firmware" duration="0">
         <h2><strong>Build and flash the project by running:</strong></h2>
 <p>Build and flash your device using</p>
 <pre><code>make</code></pre>
@@ -134,7 +134,7 @@ macOS    /dev/cu</code></pre>
 
       </google-codelab-step>
     
-      <google-codelab-step label="Programming your FW image to the device" duration="0">
+      <google-codelab-step label="Programming the Firmware" duration="0">
         <h2><strong>Programming</strong></h2>
 <p>Programming the device can be done with espressif tools <strong>esptools</strong></p>
 <pre><code>make flash</code></pre>
@@ -189,7 +189,7 @@ ets Jun  8 2016 00:22:57
 
       </google-codelab-step>
     
-      <google-codelab-step label="How to create and run a Thread" duration="0">
+      <google-codelab-step label="Creating a Thread" duration="0">
         <h2>Hey, w<strong>hat is a thread?</strong></h2>
 <p>Without an multithreading OS, all commands are executed in a big loop, often referred to the ‘main&#39; loop. When software gets more complex, this approach sometimes cannot fulfill the realtime requirements, since every command is executed sequentially.</p>
 <p>Thus you want to set up and execute multiple loops in parallel, and allow them to interrupt each other.</p>
