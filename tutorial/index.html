@@ -107,6 +107,8 @@ git config --global user.email &#34;john.doe@gmail.com&#34;</code></pre>
 <p>Checking out the espressif Mesh Development Kit can be done with following command, be sure to add the recursive option, to check out all the submodules. The submodules also contain a specific version of the ESP-IDF, the common</p>
 <pre><code>git clone --recursive https://github.com/espressif/esp-mdf.git
 export MDF_PATH=~/esp/esp-mdf</code></pre>
+<p><code>The sample project will just use the reference to the ESP-MDF and lives along with this tutorial in:</code></p>
+<pre><code>git clone https://github.com/locomuco/esp32-tutorial.git</code></pre>
 
 
       </google-codelab-step>
@@ -125,7 +127,8 @@ macOS    /dev/cu</pre>
       </google-codelab-step>
     
       <google-codelab-step label="Building the Firmware" duration="0">
-        <h2><strong>Build and flash the project by running:</strong></h2>
+        <p>The Firmware in this tutorial will be built in the checked out esp32-tutorial repo you just checked out.</p>
+<h2><strong>Build and flash the project by running:</strong></h2>
 <p>Build your firmware using</p>
 <pre><code>make</code></pre>
 <p>The esp-idf uses menuconfig to apply different configurations, just have a try and look through the different options.</p>
