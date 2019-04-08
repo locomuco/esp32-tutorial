@@ -56,7 +56,7 @@
 </ul>
 <h2><strong>What you&#39;ll need</strong></h2>
 <ul>
-<li>A ESP32 development board</li>
+<li>A ESP32 development board, preferably 3</li>
 <li>A computer running Linux, Windows, or macOS</li>
 <li>A USB cable to connect the dev board to your computer</li>
 <li>A text editor, or the IDE of your choice</li>
@@ -105,8 +105,9 @@ tar -xzf ~/Downloads/xtensa-esp32-elf-linux32-1.22.0-80-g6c4433a-5.2.0.tar.gz</c
 git config --global user.email &#34;john.doe@gmail.com&#34;</code></pre>
 <h2><strong>Getting the Source Code</strong></h2>
 <p>Checking out the espressif Mesh Development Kit can be done with following command, be sure to add the recursive option, to check out all the submodules. The submodules also contain a specific version of the ESP-IDF, the common</p>
-<pre><code>git clone --recursive https://github.com/espressif/esp-mdf.git
-export MDF_PATH=~/esp/esp-mdf</code></pre>
+<pre><code>git clone --recursive https://github.com/espressif/esp-mdf.git</code></pre>
+<p>And export the path to your mesh development sdk</p>
+<pre><code>export MDF_PATH=~/esp/esp-mdf</code></pre>
 <p><code>The sample project will just use the reference to the ESP-MDF and lives along with this tutorial in:</code></p>
 <pre><code>git clone https://github.com/locomuco/esp32-tutorial.git</code></pre>
 
@@ -180,10 +181,12 @@ ets Jun  8 2016 00:22:57
 rst:0x1 (POWERON_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
 ets Jun  8 2016 00:22:57
 ...</pre>
-<pre><code></code></pre>
 <aside class="special"><p>To leave the logging use   ‘Ctrl+]&#39;</p>
 </aside>
-<p>The programming baudrate can be changed using menuconfig as described in the previous step, see selection below, this speeds up the development cycle by a few seconds</p>
+<p>But you can also use cat or screen, whatever you prefer</p>
+<pre>cat /dev/ttyUSB0
+Screen /dev/ttyUSB0 &lt;baudrate&gt; </pre>
+<p>The programming and console baudrate can be changed using menuconfig as described in the previous step, see selection below, this speeds up the development cycle by a few seconds</p>
 <p><img style="width: 624.00px" src="img/93dd2e680b74413f.png"></p>
 <p>Congrats, you now can do the full compile / program / debug cycle :-)</p>
 <aside class="special"><p>You can combine the whole cycle in one line typing:</p>
@@ -241,15 +244,9 @@ ets Jun  8 2016 00:22:57
 <pre><code>#include &#34;driver/gpio.h&#34;</code></pre>
 <pre><code>#define GPIO_LED 2
 
-static int blink_count = 0;
-
-void led_set_blinking(int count)
-{
-   blink_count = count;
-}
-
 void led_task(void *pvParameter)
 {
+   int blink_count = 0;
    int i;
    /* set PAD to GPIO mode */
    gpio_pad_select_gpio(GPIO_LED);
@@ -276,19 +273,90 @@ void led_task(void *pvParameter)
     
       <google-codelab-step label="ESP32 WiFi Mesh" duration="0">
         <p>The ESP32 mesh architecture consists of a root node, that acts as a gateway to the outside world, you can build this root node, setting the correct option in the menuconfig of the example.</p>
-<p>However, we have prepared a node locally already, so you can concentrate on the nodes only.</p>
-<p><img style="width: 624.00px" src="img/35c29b331e305192.jpeg"></p>
+<p>However, we have prepared a root node locally already, so you can concentrate on the nodes only.</p>
+<p>To limit the number of connections, you can set the following option in menuconfig</p>
+<pre><code>CONFIG_MWIFI_MAX_CONNECTION=2</code></pre>
+<p>With this setting applied our network topology will look like the picture below. Each intermediate node can only reach 2 more nodes in the Network</p>
+<p><img style="width: 624.00px" src="img/bbe0faf4dfa79b08.png"></p>
 <p>See below he menuconfig option to switch between the different modes</p>
 <p><img style="width: 624.00px" src="img/314228079280b795.png"></p>
 
 
       </google-codelab-step>
     
-      <google-codelab-step label="Where am I?" duration="0">
+      <google-codelab-step label="Where am I in the network?" duration="0">
         <p>Now we want to use a given Mesh API, to identify in which layer of the mesh we are located at the moment.</p>
 <pre><code>#include &#34;mlink.h&#34;</code></pre>
 <pre><code>esp_mesh_get_layer();</code></pre>
 <p>Just use this API to update your blink count, and you&#39;ll see, in which layer of the mesh you are currently</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Whois?" duration="0">
+        <p>OK, now that we are all connected in a WiFi mesh - tree, whatever. We want to find out who is who in the network. Therefore the root node is broadcasting a message for a dedicated group of nodes. You&#39;re already part of this group.</p>
+<p>Your node read thread is already listening, and spitting out messages for that. Look out for following function in the code.</p>
+<pre><code>static void node_read_task(void *arg)</code></pre>
+<p>There is some statement for receiving a packet inside the mesh network</p>
+<pre><code>ret = mwifi_read(src_addr, &amp;data_type, data, &amp;size, portMAX_DELAY);</code></pre>
+<p>After that you can add following code to differentiate group messages from normal messages</p>
+<pre><code>       if (data_type.group &amp;&amp; data_type.custom == MESH_LIST_MAGIC) {
+            /* Interpret group broadcasts as mesh member list */
+            print_mesh_node_list((uint8_t *)data, size);
+        } else {
+            /* Print any other payload */
+            MDF_LOGI(&#34;Node receive, addr: &#34; MACSTR &#34;, size: %d, data: %s&#34;, MAC2STR(src_addr), size, data);
+        }
+</code></pre>
+<p>The function to parse and print the payload coming from the root is below</p>
+<pre><code>static void
+print_mesh_node_list(const uint8_t *buf, size_t buf_len)
+{
+    if (buf_len &lt; (sizeof(struct mesh_list_hdr) + sizeof(mesh_addr_t) * 1)) {
+        /* There should be at least one node (root) in the list. */
+        return;
+    }
+
+    /* Parse header */
+    struct mesh_list_hdr *hdr = (struct mesh_list_hdr *)buf;
+
+    /* Show entries */
+    mesh_addr_t *entries = (mesh_addr_t *)&amp;buf[sizeof(struct mesh_list_hdr)];
+
+    MDF_LOGI(&#34;Mesh node members:&#34;);
+    for (int i = 0; i &lt; hdr-&gt;num_entries; i++) {
+        mesh_addr_t *node = &amp;entries[i];
+        if ((uint8_t *)&amp;node &gt; &amp;buf[buf_len - 1]) {
+            MDF_LOGW(&#34;Node received mesh node list with too short buffer&#34;);
+            return;
+        }
+
+        MDF_LOGI(&#34;  &#34; MACSTR &#34;&#34;, MAC2STR(node-&gt;addr));
+    }
+}</code></pre>
+<p>What you will get is a list of MAC addresses, that are connected to the network. You can now send messages to the other participants using the function below..</p>
+<pre><code>void send_msg(void)
+{
+   mdf_err_t ret = MDF_OK;
+   int count     = 0;
+   size_t size   = 0;
+   char *data    = MDF_MALLOC(MWIFI_PAYLOAD_LEN);
+   mwifi_data_type_t data_type = {0x0};
+
+   size = sprintf(data, &#34;Tell &lt;your name&gt; &#34;);
+   ret = mwifi_write(NULL, &amp;data_type, data, size, true);
+   MDF_FREE(data);
+}
+</code></pre>
+<p>While the first argument of mwifi_write is the destination mac (NULL for root)</p>
+<pre><code>uint8_t dst_addr[MWIFI_ADDR_LEN] = {0x0};
+/* send to root */
+mwifi_write(NULL, &amp;data_type, data, size, true);
+/* send to node */
+mwifi_write(dst_addr, &amp;data_type, data, size, true);
+</code></pre>
+<p>Now it&#39;s up to you to find out who&#39;s who. Have fun finding out.</p>
+<p>Thanks for bearing with us during this codelab....</p>
 
 
       </google-codelab-step>
