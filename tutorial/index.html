@@ -275,10 +275,17 @@ void led_task(void *pvParameter)
       </google-codelab-step>
     
       <google-codelab-step label="ESP32 WiFi Mesh" duration="0">
-        <p>Blabla</p>
+        <p>The ESP32 mesh architecture consists of a root node, that acts as a gateway to the outside world, you can build this root node, setting the correct option in the menuconfig of the example.</p>
+<p>However, we have prepared a node locally already, so you can concentrate on the nodes only.</p>
+<p><img style="width: 624.00px" src="img/7f10b429c6d4417b.png"></p>
+<p>See below he menuconfig option to switch between the different modes</p>
 <p><img style="width: 624.00px" src="img/314228079280b795.png"></p>
-<h2><strong>TBD</strong></h2>
-<p>TBD</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="ESP32 WiFi Mesh" duration="0">
+        <p>Now we want to use a given Mesh API, to identify in which layer of the mesh we are located at the moment.</p>
 <pre><code>#include &#34;mlink.h&#34;</code></pre>
 <pre><code>static mdf_err_t led_show_layer(mlink_handle_data_t *handle_data)
 {
