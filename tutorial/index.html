@@ -52,7 +52,7 @@
 <li>How to build / compile and debug a program for a Microcontroller</li>
 <li>How to program a Microcontroller with your compiled code</li>
 <li>How to create and run a task in a Embedded Device</li>
-<li>How to set up a Mesh Network with the ESP32 base samples</li>
+<li>How to set up a Mesh Network ESP32 Mesh Development SDK</li>
 </ul>
 <h2><strong>What you&#39;ll need</strong></h2>
 <ul>
@@ -67,8 +67,35 @@
 
       </google-codelab-step>
     
-      <google-codelab-step label="Git &amp; Github" duration="0">
-        <h2><strong>Setting up Git</strong></h2>
+      <google-codelab-step label="Getting set up" duration="0">
+        <h2><strong>Setting up the Toolchain</strong></h2>
+<h3><strong>Linux (Ubuntu)</strong></h3>
+<p><a href="https://dl.espressif.com/dl/xtensa-esp32-elf-linux64-1.22.0-80-g6c4433a-5.2.0.tar.gz" target="_blank"><paper-button class="colored" raised><iron-icon icon="file-download"></iron-icon>Download Toolchain 64 bit</paper-button></a></p>
+<p>or</p>
+<pre><code>wget https://dl.espressif.com/dl/xtensa-esp32-elf-linux64-1.22.0-80-g6c4433a-5.2.0.tar.gz</code></pre>
+<p>and extract </p>
+<pre><code>mkdir -p ~/esp
+cd ~/esp
+tar -xzf ~/Downloads/xtensa-esp32-elf-linux64-1.22.0-80-g6c4433a-5.2.0.tar.gz</code></pre>
+<p><a href="https://dl.espressif.com/dl/xtensa-esp32-elf-linux32-1.22.0-80-g6c4433a-5.2.0.tar.gz" target="_blank"><paper-button class="colored" raised><iron-icon icon="file-download"></iron-icon>Download Toolchain 32 bit</paper-button></a></p>
+<p>or</p>
+<pre><code>wget https://dl.espressif.com/dl/xtensa-esp32-elf-linux32-1.22.0-80-g6c4433a-5.2.0.tar.gz</code></pre>
+<p>and extract </p>
+<pre><code>mkdir -p ~/esp
+cd ~/esp
+tar -xzf ~/Downloads/xtensa-esp32-elf-linux32-1.22.0-80-g6c4433a-5.2.0.tar.gz</code></pre>
+<p>Set up the build requirements</p>
+<pre><code>sudo apt-get install gcc git wget make libncurses-dev flex bison gperf python python-pip python-setuptools python-serial python-cryptography python-future python-pyparsing</code></pre>
+<p>To keep the ESP32 makefile system informed about the location of your compiler, you need to export the Compiler Path, you can do it at any time in your open terminal, or add this line to the end of your bashrc at </p>
+<pre><code>export PATH=&#34;$HOME/esp/xtensa-esp32-elf/bin:$PATH&#34;</code></pre>
+<p>bashrc file</p>
+<pre><code>~/.bashrc</code></pre>
+<h3><strong>Windows</strong></h3>
+<p><a href="https://dl.espressif.com/dl/esp32_win32_msys2_environment_and_toolchain-20181001.zip" target="_blank"><paper-button class="colored" raised><iron-icon icon="file-download"></iron-icon>Download ZIP</paper-button></a></p>
+<p>Unzip the zip file to <code>C:\</code> (or some other location, but this guide assumes <code>C:\</code>) and it will create an <code>msys32</code> directory with a pre-prepared environment.</p>
+<h3>macOS</h3>
+<p><a href="https://dl.espressif.com/dl/xtensa-esp32-elf-osx-1.22.0-80-g6c4433a-5.2.0.tar.gz" target="_blank"><paper-button class="colored" raised><iron-icon icon="file-download"></iron-icon>Download Toolchain</paper-button></a></p>
+<h2><strong>Setting up Git</strong></h2>
 <p>If you have experience with Git and Github already, feel free to jump directly to the next chapter</p>
 <h3><strong>Linux (Ubuntu)</strong></h3>
 <p>Install the git package</p>
@@ -76,29 +103,6 @@
 <p>Set your git name and email</p>
 <pre><code>git config --global user.name &#34;John Doe&#34;
 git config --global user.email &#34;john.doe@gmail.com&#34;</code></pre>
-
-
-      </google-codelab-step>
-    
-      <google-codelab-step label="Getting set up" duration="0">
-        <h2><strong>Setting up the Toolchain</strong></h2>
-<h3><strong>Linux (Ubuntu)</strong></h3>
-<p><a href="https://dl.espressif.com/dl/xtensa-esp32-elf-linux64-1.22.0-80-g6c4433a-5.2.0.tar.gz" target="_blank"><paper-button class="colored" raised><iron-icon icon="file-download"></iron-icon>Download Toolchain 64 bit</paper-button></a></p>
-<pre><code>mkdir -p ~/esp
-cd ~/esp
-tar -xzf ~/Downloads/xtensa-esp32-elf-linux64-1.22.0-80-g6c4433a-5.2.0.tar.gz</code></pre>
-<p><a href="https://dl.espressif.com/dl/xtensa-esp32-elf-linux32-1.22.0-80-g6c4433a-5.2.0.tar.gz" target="_blank"><paper-button class="colored" raised><iron-icon icon="file-download"></iron-icon>Download Toolchain 32 bit</paper-button></a></p>
-<pre><code>mkdir -p ~/esp
-cd ~/esp
-tar -xzf ~/Downloads/xtensa-esp32-elf-linux32-1.22.0-80-g6c4433a-5.2.0.tar.gz</code></pre>
-<p>Setting up Build Requirements</p>
-<pre><code>sudo apt-get install gcc git wget make libncurses-dev flex bison gperf python python-pip python-setuptools python-serial python-cryptography python-future python-pyparsing</code></pre>
-<pre><code>export PATH=&#34;$HOME/esp/xtensa-esp32-elf/bin:$PATH&#34;</code></pre>
-<h3><strong>Windows</strong></h3>
-<p><a href="https://dl.espressif.com/dl/esp32_win32_msys2_environment_and_toolchain-20181001.zip" target="_blank"><paper-button class="colored" raised><iron-icon icon="file-download"></iron-icon>Download ZIP</paper-button></a></p>
-<p>Unzip the zip file to <code>C:\</code> (or some other location, but this guide assumes <code>C:\</code>) and it will create an <code>msys32</code> directory with a pre-prepared environment.</p>
-<h3>macOS</h3>
-<p><a href="https://dl.espressif.com/dl/xtensa-esp32-elf-osx-1.22.0-80-g6c4433a-5.2.0.tar.gz" target="_blank"><paper-button class="colored" raised><iron-icon icon="file-download"></iron-icon>Download Toolchain</paper-button></a></p>
 <h2><strong>Getting the Source Code</strong></h2>
 <p>Checking out the espressif Mesh Development Kit can be done with following command, be sure to add the recursive option, to check out all the submodules. The submodules also contain a specific version of the ESP-IDF, the common</p>
 <pre><code>git clone --recursive https://github.com/espressif/esp-mdf.git
@@ -185,15 +189,6 @@ ets Jun  8 2016 00:22:57
 
       </google-codelab-step>
     
-      <google-codelab-step label="ESP32 WiFi Mesh" duration="0">
-        <p>blabla</p>
-<p><img style="width: 624.00px" src="img/314228079280b795.png"></p>
-<h2><strong>TBD</strong></h2>
-<p>TBD</p>
-
-
-      </google-codelab-step>
-    
       <google-codelab-step label="How to create and run a Thread" duration="0">
         <h2>Hey, w<strong>hat is a thread?</strong></h2>
 <p>Without an multithreading OS, all commands are executed in a big loop, often referred to the ‘main&#39; loop. When software gets more complex, this approach sometimes cannot fulfill the realtime requirements, since every command is executed sequentially.</p>
@@ -274,6 +269,15 @@ void led_task(void *pvParameter)
 }</code></pre>
 <aside class="special"><p>ESP32 is a 32-bit architecture, reads and writes to 32-bit variables are atomic. In this case we don&#39;t need to protect the delay variable, when accessed from different threads from the outside.</p>
 </aside>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="ESP32 WiFi Mesh" duration="0">
+        <p>blabla</p>
+<p><img style="width: 624.00px" src="img/314228079280b795.png"></p>
+<h2><strong>TBD</strong></h2>
+<p>TBD</p>
 
 
       </google-codelab-step>
