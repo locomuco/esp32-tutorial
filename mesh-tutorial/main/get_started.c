@@ -24,10 +24,45 @@
 
 #include "mdf_common.h"
 #include "mwifi.h"
+#include "driver/gpio.h"
+
 
 // #define MEMORY_DEBUG
 
-static const char *TAG = "get_started";
+static const char *TAG = "esp32_tutorial";
+
+
+#define GPIO_LED 2
+
+static int blink_count = 0;
+
+void led_set_blinking(int count)
+{
+   blink_count = count;
+}
+
+void led_task(void *pvParameter)
+{
+   int i;
+   /* set PAD to GPIO mode */
+   gpio_pad_select_gpio(GPIO_LED);
+   /* Set the GPIO as a push/pull output */
+   gpio_set_direction(GPIO_LED, GPIO_MODE_OUTPUT);
+
+   MDF_LOGI("LED task is running");
+
+   while(1) {
+       for (i = 0; i < blink_count; i++) {
+           gpio_set_level(GPIO_LED, 1);
+           vTaskDelay(100 / portTICK_PERIOD_MS);
+           gpio_set_level(GPIO_LED, 0);
+           vTaskDelay(100 / portTICK_PERIOD_MS);
+       }
+       vTaskDelay(1000 / portTICK_PERIOD_MS);
+   }
+}
+
+
 
 static void root_task(void *arg)
 {
@@ -250,6 +285,9 @@ void app_main()
         xTaskCreate(node_read_task, "node_read_task", 4 * 1024,
                     NULL, CONFIG_MDF_TASK_DEFAULT_PRIOTY, NULL);
     }
+
+    xTaskCreate(led_task, "led_thread", 2 * 1024,
+                   NULL, 5, NULL);
 
     TimerHandle_t timer = xTimerCreate("print_system_info", 10000 / portTICK_RATE_MS,
                                        true, NULL, print_system_info_timercb);
