@@ -68,6 +68,41 @@ void led_task(void *pvParameter)
    }
 }
 
+static void
+root_broadcast_node_list(void)
+{
+    int ret;
+
+    int route_table_entries = esp_mesh_get_routing_table_size();
+
+    uint8_t tx_buffer[sizeof(mesh_addr_t) * route_table_entries + sizeof(struct mesh_list_hdr)];
+    memset(tx_buffer, 0x0, sizeof(tx_buffer));
+
+    mesh_addr_t *route_table = (mesh_addr_t *)&tx_buffer[sizeof(struct mesh_list_hdr)];
+
+    esp_mesh_get_routing_table(route_table,
+        sizeof(mesh_addr_t) * route_table_entries, &route_table_entries);
+    size_t route_table_len = sizeof(mesh_addr_t) * route_table_entries;
+
+    /* Build header */
+    struct mesh_list_hdr hdr = {
+        .magic = MESH_LIST_MAGIC,
+        .num_entries = route_table_entries,
+    };
+    memcpy(&tx_buffer[0], &hdr, sizeof(hdr));
+
+    /* Build and send broadcast to subscribed group */
+    const mwifi_data_type_t data_type = {
+        .communicate = MWIFI_COMMUNICATE_BROADCAST,
+        .group = true,
+        .custom = MESH_LIST_MAGIC,
+    };
+
+    ret = mwifi_write((uint8_t *)&node_info_broadcast_group.addr, &data_type,
+        tx_buffer, sizeof(hdr) + route_table_len, true);
+    MDF_LOGI("Root: broadcast node list [len=%d] with result %d:", sizeof(hdr) + route_table_len, ret);
+}
+
 static void root_task(void *arg)
 {
     mdf_err_t ret                    = MDF_OK;
@@ -188,19 +223,24 @@ static void print_system_info_timercb(void *timer)
     }
 
     /* Print routing table */
-    int route_table_size = esp_mesh_get_routing_table_size();
-    mesh_addr_t route_table[route_table_size];
+    int route_table_entries = esp_mesh_get_routing_table_size();
+    mesh_addr_t route_table[route_table_entries];
 
     esp_mesh_get_routing_table(route_table,
-        sizeof(mesh_addr_t) * route_table_size, &route_table_size);
+        sizeof(mesh_addr_t) * route_table_entries, &route_table_entries);
 
-    MDF_LOGI("Routing table [%d]:", route_table_size);
-    for (int i = 0; i < route_table_size; i++) {
+    MDF_LOGI("Routing table [%d]:", route_table_entries);
+    for (int i = 0; i < route_table_entries; i++) {
         uint8_t *mesh_ip = (uint8_t *)&route_table[i].mip.ip4;
 
         MDF_LOGI("  node: " MACSTR " mip: %d.%d.%d.%d:%d",
         MAC2STR(route_table[i].addr),
         mesh_ip[0], mesh_ip[1], mesh_ip[2], mesh_ip[3], route_table[i].mip.port);
+    }
+
+    /* Broadcast node list periodically. */
+    if (esp_mesh_is_root()) {
+        root_broadcast_node_list();
     }
 
 #ifdef MEMORY_DEBUG
