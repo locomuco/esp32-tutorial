@@ -27,6 +27,15 @@
 #include "driver/gpio.h"
 #include "mlink.h"
 
+const mesh_addr_t node_info_broadcast_group = { .addr = { 0x01, 0x00, 0x5e, 0xae, 0xae, 0xae } };
+
+#define MESH_LIST_MAGIC 0xcc
+
+struct mesh_list_hdr {
+    uint8_t magic;
+    uint8_t num_entries;
+    mesh_addr_t entries[0];
+}  __attribute__((packed));
 
 // #define MEMORY_DEBUG
 
@@ -291,6 +300,9 @@ void app_main()
         xTaskCreate(root_task, "root_task", 4 * 1024,
                     NULL, CONFIG_MDF_TASK_DEFAULT_PRIOTY, NULL);
     } else {
+        /* Join info group for receiving list of available nodes. */
+        MDF_ERROR_ASSERT(esp_mesh_set_group_id(&node_info_broadcast_group, 1));
+
         xTaskCreate(node_write_task, "node_write_task", 4 * 1024,
                     NULL, CONFIG_MDF_TASK_DEFAULT_PRIOTY, NULL);
         xTaskCreate(node_read_task, "node_read_task", 4 * 1024,
