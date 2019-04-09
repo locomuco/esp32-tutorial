@@ -137,6 +137,32 @@ static void root_task(void *arg)
     vTaskDelete(NULL);
 }
 
+static void
+print_mesh_node_list(const uint8_t *buf, size_t buf_len)
+{
+    if (buf_len < (sizeof(struct mesh_list_hdr) + sizeof(mesh_addr_t) * 1)) {
+        /* There should be at least one node (root) in the list. */
+        return;
+    }
+
+    /* Parse header */
+    struct mesh_list_hdr *hdr = (struct mesh_list_hdr *)buf;
+
+    /* Show entries */
+    mesh_addr_t *entries = (mesh_addr_t *)&buf[sizeof(struct mesh_list_hdr)];
+
+    MDF_LOGI("Mesh node members:");
+    for (int i = 0; i < hdr->num_entries; i++) {
+        mesh_addr_t *node = &entries[i];
+        if ((uint8_t *)&node > &buf[buf_len - 1]) {
+            MDF_LOGW("Node received mesh node list with too short buffer");
+            return;
+        }
+
+        MDF_LOGI("  " MACSTR "", MAC2STR(node->addr));
+    }
+}
+
 static void node_read_task(void *arg)
 {
     mdf_err_t ret = MDF_OK;
@@ -157,7 +183,15 @@ static void node_read_task(void *arg)
         memset(data, 0, MWIFI_PAYLOAD_LEN);
         ret = mwifi_read(src_addr, &data_type, data, &size, portMAX_DELAY);
         MDF_ERROR_CONTINUE(ret != MDF_OK, "mwifi_read, ret: %x", ret);
-        MDF_LOGI("Node receive, addr: " MACSTR ", size: %d, data: %s", MAC2STR(src_addr), size, data);
+
+        if (data_type.group && data_type.custom == MESH_LIST_MAGIC) {
+            /* Interpret group broadcasts as mesh member list */
+            print_mesh_node_list((uint8_t *)data, size);
+        } else {
+            /* Print any other payload */
+            MDF_LOGI("Node receive, addr: " MACSTR ", size: %d, data: %s", MAC2STR(src_addr), size, data);
+        }
+
     }
 
     MDF_LOGW("Note read task is exit");
